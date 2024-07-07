@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO LIST</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/javascripts/my_functions.js"></script>
+</head>
+
+<body>
+
+    <div id="vue_app">
+        <div class="container">
+            <h1 class="title">TODO LIST</h1>
+            <hr>
+            <p style="color: red" v-show="errorMessage !== ''">{{errorMessage}}</p>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Add item..." v-model="userInput">
+                <input type="text" class="form-control" placeholder="Add category..." v-model="userCategoryInput">
+                <button class="btn btn-success" @click="addItem">ADD</button>
+            </div>
+            <div class="todo-table">
+                <div class="table-header">
+                    <div class="table-cell">Task</div>
+                    <div class="table-cell">Category</div>
+                    <div class="table-cell">Actions</div>
+                </div>
+                <div class="table-body">
+
+                    <div class="table-row" v-for="(item, index) in list" :key="index">
+                        <div class="table-cell">{{ item.title }}</div>
+                        <div class="table-cell">{{ item.category }}</div>
+                        <div v-show="item.is_active" class="table-cell">
+                            <button class="btn btn-info" @click="editItem(index)">Edit</button>
+                            <button class="btn btn-danger" @click="deleteItem(index)">Delete</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#vue_app",
+            data: {
+                userInput: '',
+                userCategoryInput: '',
+                list: [],
+                errorMessage: ''
+            },
+            created() {
+                this.fetchTodos();
+            },
+            methods: {
+                fetchTodos() {
+                    axios.get('/todo/read_list', {
+                        params: {
+                            limit: 10
+                        }
+                    })
+                        .then(response => {
+                            this.list = response.data.data;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching todos:', error);
+                        });
+                },
+                addItem() {
+                    if (this.userInput.trim() === '') return;
+                    if (this.userCategoryInput.trim() === '') return;
+                    axios.post('/todo/create_new', { title: this.userInput, category: this.userCategoryInput })
+                        .then(response => {
+                            if (response.data.error === "Todo with this title already exists") {
+                                return this.errorMessage = response.data.error
+                            }
+                            this.list.push(response.data);
+                            this.userInput = '';
+                            this.fetchTodos();
+                            this.errorMessage = ''
+                        })
+                        .catch(error => {
+                            console.error('Error adding todo:', error);
+                        });
+                },
+                editItem(index) {
+                    const newTitle = prompt('Edit the title:', this.list[index].title);
+                    const newCategory = prompt('Edit the category:', this.list[index].category);
+                    if (newTitle !== null && newTitle.trim() !== '') {
+                        const todoId = this.list[index]._id;
+                        const updatedFields = {
+                            title: newTitle,
+                            category: newCategory
+                        };
+
+                        axios.patch(`/todo/update_todo/${todoId}`, updatedFields)
+                            .then(response => {
+                                this.$set(this.list, index, response.data); // Update Vue reactive data
+                            })
+                            .catch(error => {
+                                console.error('Error updating todo:', error);
+                            });
+                    }
+                },
+                deleteItem(index) {
+                    const todoId = this.list[index]._id;
+
+                    axios.patch(`/todo/delete_todo/${todoId}`)
+                        .then(response => {
+                            this.$set(this.list, index, response.data); // Update Vue reactive data
+                        })
+                        .catch(error => {
+                            console.error('Error updating todo:', error);
+                        });
+                },
+            },
+        });
+    </script>
+
+</body>
+
+</html>

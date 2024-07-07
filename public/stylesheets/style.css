@@ -1,0 +1,138 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+img {
+  height: 200px;
+}
+
+header {
+  background-color: rgb(48, 47, 47);
+  color: white;
+  padding: 10px 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+}
+
+.logo img {
+  height: 40px;
+  width: auto;
+}
+
+/* Todo list styles */
+#app {
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+hr {
+  border: 1px solid #ccc;
+}
+
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-control {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.btn-success {
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.todo-table {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: flex;
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.table-cell {
+  flex: 1;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.table-body {
+  display: grid;
+}
+
+.table-row {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+.even-row {
+  background-color: #f9f9f9;
+}
+
+.completed {
+  text-decoration: line-through;
+}
+
+.completed-cell {
+  color: #888;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+button{
+  margin-left:3px;
+}
